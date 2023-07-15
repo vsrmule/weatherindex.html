@@ -1,0 +1,273 @@
+<html>
+<head>
+  <title>Weather360</title>
+  <style>
+    .container {
+      width: 800px;
+      height: 1500px;
+      margin: 0 auto;
+      background-image: url(''); /* Initially empty */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-container input[type=text] {
+      padding: 10px;
+      width: 275px;
+      font-size: 16px;
+      border: 1px solid gray;
+      border-radius: 10px;
+    }
+
+    .search-container button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    .heading-container {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0px;
+    }
+
+    .heading {
+      font-size: 40px;
+      color: #ffffff;
+      margin-right: 0px;
+    }
+
+    .weather-icon {
+      width: 70px;
+      height: 70px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .forecast-item {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .forecast-item .date {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .forecast-item .icon {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    #feedback-section {
+      margin-top: 20px;
+      text-align: center; /* Center align the content */
+    }
+
+    #feedback-section textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid gray;
+      border-radius: 10px;
+    }
+
+    #feedback-section button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    #present-weather {
+      vertical-align: middle;
+    }
+
+    #weather-table-container {
+      padding: 10px;
+    }
+
+    #weather-table {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="heading-container">
+      <h1 class="heading">Weather360</h1>
+      <img src="icon.png" alt="Icon" width="70" height="70">
+    </div>
+    <div class="search-container">
+      <input type="text" id="location-input" placeholder="Search...">
+      <button type="submit" id="fetchButton">Search</button>
+    </div>
+    <div id="present-weather"></div>
+    <div id="weather-table-container">
+      <h3 style="text-align: center;"></h3>
+      <table id="weather-table">
+      </table>
+    </div>
+    <div id="forecast-weather"></div>
+
+    <div id="feedback-section">
+      <h3 style="text-align: center;">Feedback</h3>
+      <p>We would love to hear your feedback on Weather360. Please let us know what you think:</p>
+      <textarea id="feedback-input" rows="4" cols="50" placeholder="Enter your feedback here..."></textarea>
+      <button type="submit" id="submitFeedbackButton">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    function setBackgroundBasedOnTime() {
+      // Function to set background image based on time
+      const currentTime = new Date().getHours();
+      const container = document.querySelector('.container');
+
+      if (currentTime >= 6 && currentTime < 18) {
+        container.style.backgroundImage = "url('cloud.jpeg')";
+      } else {
+        container.style.backgroundImage = "url('cloud.jpeg')";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      setBackgroundBasedOnTime(); // Set initial background image
+
+      const inputField = document.getElementById('location-input');
+      const fetchButton = document.getElementById('fetchButton');
+      const presentWeatherDiv = document.getElementById('present-weather');
+      const weatherTable = document.getElementById('weather-table');
+      const forecastWeatherDiv = document.getElementById('forecast-weather');
+      const feedbackInput = document.getElementById('feedback-input');
+      const submitFeedbackButton = document.getElementById('submitFeedbackButton');
+
+      fetchButton.addEventListener('click', function() {
+        const location = inputField.value;
+        if (!location) {
+          alert('Please enter a valid pin code or location.');
+          return;
+        }
+
+        const apiKey = 'd5c255f919a46aa10312362a940d2897'; // Replace with your OpenWeatherMap API key
+        const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${location}&appid=${apiKey}&units=metric`;
+
+        fetch(apiUrl)
+          .then(response => response.json())
+          .then(data => {
+            if (data.cod === '404') {
+              alert('Location not found. Please check the pin code or location name.');
+              return;
+            }
+
+            const presentWeather = data.list[0];
+            const presentTemperature = presentWeather.main.temp;
+            const presentWeatherCode = presentWeather.weather[0].icon;
+            const presentWeatherDescription = presentWeather.weather[0].description;
+            const presentWindSpeed = presentWeather.wind.speed;
+            const presentHumidity = presentWeather.main.humidity;
+            const presentPressure = presentWeather.main.pressure;
+
+            presentWeatherDiv.innerHTML = `
+              <p style="text-align: center;">Present Temperature in ${data.city.name}: ${presentTemperature}°C</p>
+              <img class="weather-icon" src="http://openweathermap.org/img/w/${presentWeatherCode}.png" alt="${presentWeatherDescription}">
+              <p style="text-align: center;">Wind Speed: ${presentWindSpeed} m/s</p>
+              <p style="text-align: center;">Humidity: ${presentHumidity}%</p>
+              <p style="text-align: center;">Pressure: ${presentPressure} hPa</p>
+            `;
+
+            weatherTable.innerHTML = `
+              <tr>
+                <th>Time</th>
+                <th>Temperature</th>
+                <th>Weather</th>
+              </tr>
+            `;
+
+            for (let i = 6; i <= 10; i++) {
+              const forecast = data.list[i];
+              const forecastTime = new Date(forecast.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+              const forecastTemperature = forecast.main.temp;
+              const forecastWeatherCode = forecast.weather[0].icon;
+              const forecastWeatherDescription = forecast.weather[0].description;
+
+              const tableRow = document.createElement('tr');
+              tableRow.innerHTML = `
+                <td>${forecastTime}</td>
+                <td>${forecastTemperature}°C</td>
+                <td><img class="icon" src="http://openweathermap.org/img/w/${forecastWeatherCode}.png" alt="${forecastWeatherDescription}"></td>
+              `;
+
+              weatherTable.appendChild(tableRow);
+            }
+
+            forecastWeatherDiv.innerHTML = '<h3 style="text-align: center;">7-Day Weather Forecast</h3>';
+
+            for (let i = 0; i < 7; i++) {
+              const forecast = data.list[i * 8];
+              const forecastDate = new Date(forecast.dt * 1000).toDateString();
+              const forecastTemperature = forecast.main.temp;
+              const forecastWeatherCode = forecast.weather[0].icon;
+              const forecastWeatherDescription = forecast.weather[0].description;
+              const forecastWindSpeed = forecast.wind.speed;
+              const forecastHumidity = forecast.main.humidity;
+              const forecastPressure = forecast.main.pressure;
+
+              forecastWeatherDiv.innerHTML += `
+                <div class="forecast-item">
+                  <div class="date">${forecastDate}</div>
+                  <img class="icon" src="http://openweathermap.org/img/w/${forecastWeatherCode}.png" alt="${forecastWeatherDescription}">
+                  <div class="temperature">${forecastTemperature}°C</div>
+                  <p>Wind Speed: ${forecastWindSpeed} m/s</p>
+                  <p>Humidity: ${forecastHumidity}%</p>
+                  <p>Pressure: ${forecastPressure} hPa</p>
+                </div>
+              `;
+            }
+          })
+          
+      });
+
+      submitFeedbackButton.addEventListener('click', function() {
+        const feedback = feedbackInput.value;
+        if (!feedback) {
+          alert('Please enter your feedback before submitting.');
+          return;
+        }
+
+        const emailSubject = 'Feedback for Weather360';
+        const emailBody = `Feedback: ${feedback}`;
+        const mailtoLink = `mailto:mvsireesha2002@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+        window.location.href = mailtoLink;
+      });
+    });
+  </script>
+</body>
+</html>

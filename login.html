@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Form</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+	
+	.login-container {
+		width: 90%;
+		max-width: 400px;
+		background: linear-gradient(135deg,#fe0072,#c3b7c4);
+		color: #fff;
+		margin: 100px auto 0;
+		border-radius: 20px;
+		padding: 40px 35px;
+		text-align:center;
+		width: 400px;
+		margin: 0 auto;
+		margin-top: 100px;
+		box-sizing: border-box;
+		border:90px;
+	}
+	.form-group label {
+		padding-left: 0;
+		text-align: left;
+	}
+  </style>
+  <!-- Hotjar Tracking Code for https://mvsireesha.co/ -->
+<script>
+  (function(h,o,t,j,a,r){
+      h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+      h._hjSettings={hjid:3574634,hjsv:6};
+      a=o.getElementsByTagName('head')[0];
+      r=o.createElement('script');r.async=1;
+      r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+      a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+</head>
+<body>
+  <div class="container">
+    <div class="login-container shadow-lg">
+      <center><h2 style="font-size:30px;"> <u>Login</u></h2></center>
+      <br><br>
+      <form id="loginForm">
+        <div class="form-group" style="font-size:larger;">
+          <label for="email">Email:</label>
+          <input type="email" class="form-control" id="email" placeholder="Enter email">
+        </div>
+        <div class="form-group" style="font-size:larger;">
+          <label for="password">Password:</label>
+          <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+        </div>
+        <br>
+        <div style="display: flex; justify-content: center;">
+          <button id="submit" type="submit" class="btn btn-primary">Submit</button>&nbsp&nbsp&nbsp&nbsp&nbsp
+          <button id="skip" type="button" class="btn btn-primary" >Skip</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent form submission
+
+      // Get the values from the input fields
+      var email = document.getElementById("email").value;
+      var password = document.getElementById("password").value;
+
+      // Perform validation
+      if (email === "vsrmule@gmail.com" && password === "2704") {
+        alert("Login successful!");
+        window.location.href = "weatherindex.html";
+        // Perform further actions, such as redirecting to another page
+      } else {
+        alert("Invalid email or password. Please try again.");
+      }
+      
+      // Reset the form
+      document.getElementById("loginForm").reset();
+    });
+    document.getElementById("skip").addEventListener("click", function(event) {
+    event.preventDefault(); // Prevent default button behavior
+
+    // Redirect to another page
+    window.location.href = "weatherindex.html";
+  });
+  </script>
+</body>
+</html>
